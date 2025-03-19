@@ -17,6 +17,7 @@ export const typeDefs = gql`
   type Mutation {
     incrementTrackViews(id: ID!): IncrementTrackViewsResponse!
     incrementNumberOfLikes(id: ID!): IncrementNumberOfLikesResponse!
+    createUser(username: String!, password: String!): CreateUserResponse!
   }
 
   type IncrementTrackViewsResponse {
@@ -30,6 +31,17 @@ export const typeDefs = gql`
     success: Boolean!
     message: String!
     track: Track
+  }
+  type CreateUserResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    user: User
+  }
+
+  type User {
+    id: ID!
+    username: String!
   }
 
   type Doctor {

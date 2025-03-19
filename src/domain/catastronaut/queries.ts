@@ -6,7 +6,6 @@ type CatstronautQueries = WithRequired<QueryResolvers, 'getTracks'>
 export const catstronautQueries: CatstronautQueries = {
   getTracks: async (_, __, {dataSources}) => {
     const data = await dataSources.trackApi.getTracks()
-    console.log({data})
     return data
   },
 }

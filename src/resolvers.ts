@@ -7,6 +7,7 @@ import { ghibliQueries } from "./domain/ghibli/queries.js"
 import { TrackResolver } from "./domain/catastronaut/models.js"
 import { catstronautMutations } from "./domain/catastronaut/mutations.js"
 import { FilmResolver, PeopleResolver } from "./domain/ghibli/models.js"
+import { userMutations } from "./domain/user/mutations.js"
 
 export const resolvers: Resolvers = {
   Query: {
@@ -14,10 +15,11 @@ export const resolvers: Resolvers = {
     ...operationQueries,
     ...colorQueries,
     ...catstronautQueries,
-    ...ghibliQueries
+    ...ghibliQueries,
   },
   Mutation: {
-    ...catstronautMutations
+    ...catstronautMutations,
+    ...userMutations,
   },
   Track: TrackResolver,
   Film: FilmResolver,

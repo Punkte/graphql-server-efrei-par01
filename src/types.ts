@@ -26,6 +26,14 @@ export type Author = {
   photo?: Maybe<Scalars['String']['output']>;
 };
 
+export type CreateUserResponse = {
+  __typename?: 'CreateUserResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
+};
+
 export type Doctor = {
   __typename?: 'Doctor';
   id: Scalars['ID']['output'];
@@ -58,8 +66,15 @@ export type IncrementTrackViewsResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createUser: CreateUserResponse;
   incrementNumberOfLikes: IncrementNumberOfLikesResponse;
   incrementTrackViews: IncrementTrackViewsResponse;
+};
+
+
+export type MutationCreateUserArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
@@ -147,6 +162,12 @@ export type Track = {
   title: Scalars['String']['output'];
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -220,6 +241,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Author: ResolverTypeWrapper<AuthorModel>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateUserResponse: ResolverTypeWrapper<CreateUserResponse>;
   Doctor: ResolverTypeWrapper<Doctor>;
   Film: ResolverTypeWrapper<FilmModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -233,12 +255,14 @@ export type ResolversTypes = {
   Speciality: Speciality;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Track: ResolverTypeWrapper<TrackModel>;
+  User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Author: AuthorModel;
   Boolean: Scalars['Boolean']['output'];
+  CreateUserResponse: CreateUserResponse;
   Doctor: Doctor;
   Film: FilmModel;
   Float: Scalars['Float']['output'];
@@ -251,12 +275,21 @@ export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String']['output'];
   Track: TrackModel;
+  User: User;
 };
 
 export type AuthorResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -291,6 +324,7 @@ export type IncrementTrackViewsResponseResolvers<ContextType = DataSourceContext
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   incrementNumberOfLikes?: Resolver<ResolversTypes['IncrementNumberOfLikesResponse'], ParentType, ContextType, RequireFields<MutationIncrementNumberOfLikesArgs, 'id'>>;
   incrementTrackViews?: Resolver<ResolversTypes['IncrementTrackViewsResponse'], ParentType, ContextType, RequireFields<MutationIncrementTrackViewsArgs, 'id'>>;
 };
@@ -325,8 +359,15 @@ export type TrackResolvers<ContextType = DataSourceContext, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = DataSourceContext> = {
   Author?: AuthorResolvers<ContextType>;
+  CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   Doctor?: DoctorResolvers<ContextType>;
   Film?: FilmResolvers<ContextType>;
   IncrementNumberOfLikesResponse?: IncrementNumberOfLikesResponseResolvers<ContextType>;
@@ -335,5 +376,6 @@ export type Resolvers<ContextType = DataSourceContext> = {
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Track?: TrackResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 
