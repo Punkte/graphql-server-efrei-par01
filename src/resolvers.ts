@@ -25,9 +25,18 @@ export const resolvers: Resolvers = {
       const data = await dataSources.trackApi.getTracks()
       console.log({data})
       return data
-    }
+    },
+    getFilms: (_, __, {dataSources}) => dataSources.ghibliApi.getFilms(),
+    getPeople: (_, __, {dataSources}) => dataSources.ghibliApi.getPeople(),
   },
   Track: {
     author: (parent, _, {dataSources}) => dataSources.trackApi.getAuthorBy(parent.authorId)
+  },
+  Film: {
+    people: ({people}, _, {dataSources}) => dataSources.ghibliApi.getPeopleByUrls(people),
+  },
+  People: {
+    eyeColor: ({eye_color}) => eye_color,
+    films: ({films}, _, {dataSources}) => dataSources.ghibliApi.getFilmsByUrls(films),
   }
 }
