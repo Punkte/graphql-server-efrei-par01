@@ -1,63 +1,25 @@
-import { GraphQLError } from "graphql"
-import { doctorsData } from "./datasources/doctors.js"
-import { getClosestColor } from "./domain/colors/closestColor.js"
 import { Resolvers } from "./types.js"
+import { doctorQueries } from "./domain/doctors/queries.js"
+import { operationQueries } from "./domain/operations/queries.js"
+import { colorQueries } from "./domain/colors/queries.js"
+import { catstronautQueries } from "./domain/catastronaut/queries.js"
+import { ghibliQueries } from "./domain/ghibli/queries.js"
+import { TrackResolver } from "./domain/catastronaut/models.js"
+import { catstronautMutations } from "./domain/catastronaut/mutations.js"
+import { FilmResolver, PeopleResolver } from "./domain/ghibli/models.js"
 
 export const resolvers: Resolvers = {
   Query: {
-    doctors: (_, args) => args?.specialities ? doctorsData.filter(el => args?.specialities.includes(el.speciality)): doctorsData,
-    doctor: (_, {id}) => {
-      return doctorsData.find(el => el.id === id)
-    },
-    add: (_, {number1, number2}) => number1 + number2,
-    substract: (_, {number1, number2}) => number1 - number2,
-    multiply: (_, {number1, number2}) => number1 + number2,
-    divide: (_, {number1, number2}) => {
-      if (number2 === 0) throw new GraphQLError('Cannot divide by 0')
-      return number1 / number2
-    },
-    closestColor: (_, {hexa}: {hexa: string}) => {
-      if (!(hexa.match(/^#[0-9a-fA-F]{6}/))) throw new GraphQLError('Invalid color provided')
-
-      return getClosestColor(hexa, ['#ffffff', '#000000'])
-    },
-    getTracks: async (_, __, {dataSources}) => {
-      const data = await dataSources.trackApi.getTracks()
-      console.log({data})
-      return data
-    },
-    getFilms: (_, __, {dataSources}) => dataSources.ghibliApi.getFilms(),
-    getPeople: (_, __, {dataSources}) => dataSources.ghibliApi.getPeople(),
+    ...doctorQueries,
+    ...operationQueries,
+    ...colorQueries,
+    ...catstronautQueries,
+    ...ghibliQueries
   },
   Mutation: {
-    incrementTrackViews: async (_, {id}, {dataSources}) => {
-      try {
-        const track = await dataSources.trackApi.incrementTrackViews(id)
-        const message = `Incremented track views for id ${id}`
-  
-        return {
-          code: 200,
-          message,
-          success: true,
-          track
-        }
-      } catch(e) {
-        return {
-          code: 304,
-          message: 'Trackview not modified',
-          success: false,
-        }
-      }
-    }
+    ...catstronautMutations
   },
-  Track: {
-    author: (parent, _, {dataSources}) => dataSources.trackApi.getAuthorBy(parent.authorId)
-  },
-  Film: {
-    people: ({people}, _, {dataSources}) => dataSources.ghibliApi.getPeopleByUrls(people),
-  },
-  People: {
-    eyeColor: ({eye_color}) => eye_color,
-    films: ({films}, _, {dataSources}) => dataSources.ghibliApi.getFilmsByUrls(films),
-  }
+  Track: TrackResolver,
+  Film: FilmResolver,
+  People: PeopleResolver,
 }

@@ -16,9 +16,16 @@ export const typeDefs = gql`
 
   type Mutation {
     incrementTrackViews(id: ID!): IncrementTrackViewsResponse!
+    incrementNumberOfLikes(id: ID!): IncrementNumberOfLikesResponse!
   }
 
   type IncrementTrackViewsResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: Track
+  }
+  type IncrementNumberOfLikesResponse {
     code: Int!
     success: Boolean!
     message: String!

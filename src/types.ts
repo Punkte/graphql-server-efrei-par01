@@ -40,6 +40,14 @@ export type Film = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
+export type IncrementNumberOfLikesResponse = {
+  __typename?: 'IncrementNumberOfLikesResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  track?: Maybe<Track>;
+};
+
 export type IncrementTrackViewsResponse = {
   __typename?: 'IncrementTrackViewsResponse';
   code: Scalars['Int']['output'];
@@ -50,7 +58,13 @@ export type IncrementTrackViewsResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  incrementNumberOfLikes: IncrementNumberOfLikesResponse;
   incrementTrackViews: IncrementTrackViewsResponse;
+};
+
+
+export type MutationIncrementNumberOfLikesArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -128,6 +142,7 @@ export type Track = {
   __typename?: 'Track';
   author: Author;
   id: Scalars['ID']['output'];
+  numberOfViews: Scalars['Int']['output'];
   thumbnail?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
 };
@@ -209,6 +224,7 @@ export type ResolversTypes = {
   Film: ResolverTypeWrapper<FilmModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  IncrementNumberOfLikesResponse: ResolverTypeWrapper<Omit<IncrementNumberOfLikesResponse, 'track'> & { track?: Maybe<ResolversTypes['Track']> }>;
   IncrementTrackViewsResponse: ResolverTypeWrapper<Omit<IncrementTrackViewsResponse, 'track'> & { track?: Maybe<ResolversTypes['Track']> }>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -227,6 +243,7 @@ export type ResolversParentTypes = {
   Film: FilmModel;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
+  IncrementNumberOfLikesResponse: Omit<IncrementNumberOfLikesResponse, 'track'> & { track?: Maybe<ResolversParentTypes['Track']> };
   IncrementTrackViewsResponse: Omit<IncrementTrackViewsResponse, 'track'> & { track?: Maybe<ResolversParentTypes['Track']> };
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -257,6 +274,14 @@ export type FilmResolvers<ContextType = DataSourceContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IncrementNumberOfLikesResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['IncrementNumberOfLikesResponse'] = ResolversParentTypes['IncrementNumberOfLikesResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  track?: Resolver<Maybe<ResolversTypes['Track']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IncrementTrackViewsResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['IncrementTrackViewsResponse'] = ResolversParentTypes['IncrementTrackViewsResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -266,6 +291,7 @@ export type IncrementTrackViewsResponseResolvers<ContextType = DataSourceContext
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  incrementNumberOfLikes?: Resolver<ResolversTypes['IncrementNumberOfLikesResponse'], ParentType, ContextType, RequireFields<MutationIncrementNumberOfLikesArgs, 'id'>>;
   incrementTrackViews?: Resolver<ResolversTypes['IncrementTrackViewsResponse'], ParentType, ContextType, RequireFields<MutationIncrementTrackViewsArgs, 'id'>>;
 };
 
@@ -293,6 +319,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 export type TrackResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Track'] = ResolversParentTypes['Track']> = {
   author?: Resolver<ResolversTypes['Author'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  numberOfViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -302,6 +329,7 @@ export type Resolvers<ContextType = DataSourceContext> = {
   Author?: AuthorResolvers<ContextType>;
   Doctor?: DoctorResolvers<ContextType>;
   Film?: FilmResolvers<ContextType>;
+  IncrementNumberOfLikesResponse?: IncrementNumberOfLikesResponseResolvers<ContextType>;
   IncrementTrackViewsResponse?: IncrementTrackViewsResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   People?: PeopleResolvers<ContextType>;
