@@ -1,8 +1,9 @@
-import { hashPassword } from "../../modules/auth.js";
+import { GraphQLError } from "graphql";
+import { comparePasswords, createJWT, hashPassword } from "../../modules/auth.js";
 import { MutationResolvers } from "../../types.js";
 import { WithRequired } from "../../utils/mapped-types.js";
 
-type UserMutations = WithRequired<MutationResolvers, 'createUser'>
+type UserMutations = WithRequired<MutationResolvers, 'createUser' | 'signIn'>
 
 
 const createUser: NonNullable<MutationResolvers['createUser']> = async (_, {username, password}, {dataSources: {db}}) => {
@@ -30,4 +31,31 @@ const createUser: NonNullable<MutationResolvers['createUser']> = async (_, {user
   }
 }
 
-export const userMutations: UserMutations = {createUser}
+const signIn: NonNullable<MutationResolvers['signIn']> = async (_, {username, password}, {dataSources: {db}}) => {
+  try {
+    const user = await db.user.findFirstOrThrow({where: {username}})
+    const isValidPassword = await comparePasswords(password, user.password)
+  
+    if (!isValidPassword) {
+      throw new GraphQLError('Something wrong happened')
+    }
+  
+    const token = createJWT(user)
+  
+    return {
+      code: 200,
+      message: 'User authenticated',
+      success: true,
+      token,
+    }
+  } catch (e) {
+    return {
+      code: 401,
+      message: `${(e as Error)?.message}`,
+      success: false,
+      token: null,
+    }
+  }
+}
+
+export const userMutations: UserMutations = {createUser, signIn}

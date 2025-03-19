@@ -18,6 +18,7 @@ export const typeDefs = gql`
     incrementTrackViews(id: ID!): IncrementTrackViewsResponse!
     incrementNumberOfLikes(id: ID!): IncrementNumberOfLikesResponse!
     createUser(username: String!, password: String!): CreateUserResponse!
+    signIn(username: String!, password: String!): SignInResponse!
   }
 
   type IncrementTrackViewsResponse {
@@ -37,6 +38,13 @@ export const typeDefs = gql`
     success: Boolean!
     message: String!
     user: User
+  }
+
+  type SignInResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    token: String
   }
 
   type User {

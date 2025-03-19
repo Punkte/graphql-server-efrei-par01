@@ -69,6 +69,7 @@ export type Mutation = {
   createUser: CreateUserResponse;
   incrementNumberOfLikes: IncrementNumberOfLikesResponse;
   incrementTrackViews: IncrementTrackViewsResponse;
+  signIn: SignInResponse;
 };
 
 
@@ -85,6 +86,12 @@ export type MutationIncrementNumberOfLikesArgs = {
 
 export type MutationIncrementTrackViewsArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationSignInArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 export type People = {
@@ -146,6 +153,14 @@ export type QueryMultiplyArgs = {
 export type QuerySubstractArgs = {
   number1: Scalars['Float']['input'];
   number2: Scalars['Float']['input'];
+};
+
+export type SignInResponse = {
+  __typename?: 'SignInResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  token?: Maybe<Scalars['String']['output']>;
 };
 
 export enum Speciality {
@@ -252,6 +267,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   People: ResolverTypeWrapper<PeopleModel>;
   Query: ResolverTypeWrapper<{}>;
+  SignInResponse: ResolverTypeWrapper<SignInResponse>;
   Speciality: Speciality;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Track: ResolverTypeWrapper<TrackModel>;
@@ -273,6 +289,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   People: PeopleModel;
   Query: {};
+  SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
   Track: TrackModel;
   User: User;
@@ -327,6 +344,7 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   incrementNumberOfLikes?: Resolver<ResolversTypes['IncrementNumberOfLikesResponse'], ParentType, ContextType, RequireFields<MutationIncrementNumberOfLikesArgs, 'id'>>;
   incrementTrackViews?: Resolver<ResolversTypes['IncrementTrackViewsResponse'], ParentType, ContextType, RequireFields<MutationIncrementTrackViewsArgs, 'id'>>;
+  signIn?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
 };
 
 export type PeopleResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['People'] = ResolversParentTypes['People']> = {
@@ -348,6 +366,14 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   getTracks?: Resolver<Array<ResolversTypes['Track']>, ParentType, ContextType>;
   multiply?: Resolver<ResolversTypes['Float'], ParentType, ContextType, RequireFields<QueryMultiplyArgs, 'number1' | 'number2'>>;
   substract?: Resolver<ResolversTypes['Float'], ParentType, ContextType, RequireFields<QuerySubstractArgs, 'number1' | 'number2'>>;
+};
+
+export type SignInResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SignInResponse'] = ResolversParentTypes['SignInResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TrackResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Track'] = ResolversParentTypes['Track']> = {
@@ -375,6 +401,7 @@ export type Resolvers<ContextType = DataSourceContext> = {
   Mutation?: MutationResolvers<ContextType>;
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SignInResponse?: SignInResponseResolvers<ContextType>;
   Track?: TrackResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
