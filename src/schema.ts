@@ -14,6 +14,17 @@ export const typeDefs = gql`
     getPeople: [People!]!
   }
 
+  type Mutation {
+    incrementTrackViews(id: ID!): IncrementTrackViewsResponse!
+  }
+
+  type IncrementTrackViewsResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: Track
+  }
+
   type Doctor {
     id: ID!
     name: String!
@@ -30,6 +41,7 @@ export const typeDefs = gql`
     title: String!
     author: Author!
     thumbnail: String
+    numberOfViews: Int!
   }
 
   type Author {

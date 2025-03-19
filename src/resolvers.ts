@@ -29,6 +29,27 @@ export const resolvers: Resolvers = {
     getFilms: (_, __, {dataSources}) => dataSources.ghibliApi.getFilms(),
     getPeople: (_, __, {dataSources}) => dataSources.ghibliApi.getPeople(),
   },
+  Mutation: {
+    incrementTrackViews: async (_, {id}, {dataSources}) => {
+      try {
+        const track = await dataSources.trackApi.incrementTrackViews(id)
+        const message = `Incremented track views for id ${id}`
+  
+        return {
+          code: 200,
+          message,
+          success: true,
+          track
+        }
+      } catch(e) {
+        return {
+          code: 304,
+          message: 'Trackview not modified',
+          success: false,
+        }
+      }
+    }
+  },
   Track: {
     author: (parent, _, {dataSources}) => dataSources.trackApi.getAuthorBy(parent.authorId)
   },
